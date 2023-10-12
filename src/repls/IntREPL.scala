@@ -4,14 +4,22 @@ import scala.collection.mutable.Stack
 import scala.util.matching.Regex
 import scala.collection.mutable.Queue
 
+
 class IntREPL extends REPLBase {
     // Have a REPL of type Int
     type Base = Int
     override val replName: String = "int-repl"
+    var globalMap: Map[String,Int] = Map()
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace
-        shuntingYard(elements)
+        val queue = shuntingYard(elements)
+        val expression = reversePolishFunc(queue)
+        val result = expression.eval(globalMap)
+        val resultToString = result.toString
+
+        return resultToString
+
         // TODO: complete me!
         ""
         //a function that implements shunting yard algorithm, then create a tree that represents the formula given as input
@@ -59,8 +67,14 @@ class IntREPL extends REPLBase {
                     }
                     operatorStack.push(input(i))
 
+                case _ if (input(i).contains("-") && (numberPattern.findFirstMatchIn(input(i)).isDefined)) =>
+                    val negate: Int = input(i).toInt
+                    outputQueue.enqueue(negate.toString)
+
                 case _ if numberPattern.findFirstMatchIn(input(i)).isDefined => //if it's a number
                     outputQueue.enqueue(input(i))
+
+
 
                 case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
             }
@@ -73,4 +87,16 @@ class IntREPL extends REPLBase {
         }
         outputQueue
     }
+
+    def reversePolishFunc(input: mutable.Queue[String]): Expression  = //repls.secondExpression =
+        {
+            var queueToString : String = ""
+            for(i <- input.indices)
+            {
+                queueToString += input(i)
+            }
+
+            val expression : Expression = ReversePolish.reversePolishToExpression(queueToString)
+            expression
+        }
 }
