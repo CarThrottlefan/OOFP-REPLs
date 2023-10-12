@@ -33,5 +33,5 @@ object ReversePolish {
   }
 
 
-  private def isOperator(s: String) = s == "+" || s == "*" || s == "/"
+  private def isOperator(s: String) = s == "+" || s == "*" || s == "-"
 }

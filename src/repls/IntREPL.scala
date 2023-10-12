@@ -102,6 +102,7 @@ class IntREPL extends REPLBase {
             {
                 queueToString += input(i) + " "
             }
+            queueToString = queueToString.trim //removes the additional whitespace at the end
 
             val expression : Expression = ReversePolish.reversePolishToExpression(queueToString)
             expression
