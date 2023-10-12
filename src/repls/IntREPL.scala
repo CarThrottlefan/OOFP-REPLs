@@ -10,6 +10,8 @@ class IntREPL extends REPLBase {
     type Base = Int
     override val replName: String = "int-repl"
     var globalMap: Map[String,Int] = Map()
+    var operatorStack = Stack[String]()
+    var outputQueue = Queue[String]()
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace
@@ -29,8 +31,6 @@ class IntREPL extends REPLBase {
     {
         val numberPattern: Regex = "[0-9]+".r // i am using this just to define if it is a num
         val letterPattern: Regex = "[a-zA-Z]+[0-9]*".r // i am using this just to define if it is a var
-        var operatorStack = Stack[String]()
-        var outputQueue = Queue[String]()
 
         for(i <- input.indices)
         {
@@ -59,13 +59,21 @@ class IntREPL extends REPLBase {
                     operatorStack.push(input(i))
 
                 case "+" | "-" =>
-                    var topOperator = operatorStack.pop()
-                    while(topOperator == "(" || topOperator ==  "*")
+                    if(operatorStack.isEmpty)
                     {
-                        outputQueue.enqueue(topOperator)
-                        topOperator = operatorStack.pop()
+                        operatorStack.push(input(i))
                     }
-                    operatorStack.push(input(i))
+
+                    else
+                    {
+                        var topOperator = operatorStack.top
+                        while(topOperator == "(" || topOperator ==  "*")
+                        {
+                            outputQueue.enqueue(topOperator)
+                            topOperator = operatorStack.pop()
+                        }
+                        operatorStack.push(input(i))
+                    }
 
                 case _ if (input(i).contains("-") && (numberPattern.findFirstMatchIn(input(i)).isDefined)) =>
                     val negate: Int = input(i).toInt
@@ -93,7 +101,7 @@ class IntREPL extends REPLBase {
             var queueToString : String = ""
             for(i <- input.indices)
             {
-                queueToString += input(i)
+                queueToString += input(i) + " "
             }
 
             val expression : Expression = ReversePolish.reversePolishToExpression(queueToString)
