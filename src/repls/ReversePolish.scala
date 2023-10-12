@@ -6,6 +6,7 @@ object ReversePolish {
 
   def isNumber(s: String): Boolean = {
     var sCopy = s
+
     if(s.contains("-"))
     {
       sCopy = s.dropWhile(_ == '-')

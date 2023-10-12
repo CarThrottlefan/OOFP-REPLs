@@ -14,7 +14,8 @@ class IntREPL extends REPLBase {
     var outputQueue = Queue[String]()
 
     override def readEval(command: String): String = {
-        val elements = command.split("\\s") // split string based on whitespace
+        val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
+        //val elements = "( 43 - ( 35 * 2 + ( 32 - ( 45 ) * 2 ) ) )".split("\\s")
         val queue = shuntingYard(elements)
         val expression = reversePolishFunc(queue)
         val result = expression.eval(globalMap)
@@ -34,7 +35,7 @@ class IntREPL extends REPLBase {
 
         for(i <- input.indices)
         {
-            (input(i)) match
+            input(i) match
             {
                 //left bracket - just push on stack
 
@@ -66,16 +67,15 @@ class IntREPL extends REPLBase {
 
                     else
                     {
-                        var topOperator = operatorStack.top
-                        while(topOperator ==  "*" && operatorStack.nonEmpty)
+                        while(operatorStack.nonEmpty && operatorStack.top ==  "*")
                         {
-                            topOperator = operatorStack.pop()
-                            outputQueue.enqueue(topOperator)
+                            outputQueue.enqueue(operatorStack.top)
+                            operatorStack.pop()
                         }
                         operatorStack.push(input(i))
                     }
 
-                case _ if (input(i).contains("-") && (numberPattern.findFirstMatchIn(input(i)).isDefined)) =>
+                case _ if input(i).contains("-") && numberPattern.findFirstMatchIn(input(i)).isDefined =>
                     val negate: Int = input(i).toInt
                     outputQueue.enqueue(negate.toString)
 
