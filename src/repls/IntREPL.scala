@@ -67,10 +67,10 @@ class IntREPL extends REPLBase {
                     else
                     {
                         var topOperator = operatorStack.top
-                        while(topOperator == "(" || topOperator ==  "*")
+                        while(topOperator ==  "*" && operatorStack.nonEmpty)
                         {
-                            outputQueue.enqueue(topOperator)
                             topOperator = operatorStack.pop()
+                            outputQueue.enqueue(topOperator)
                         }
                         operatorStack.push(input(i))
                     }
@@ -82,9 +82,8 @@ class IntREPL extends REPLBase {
                 case _ if numberPattern.findFirstMatchIn(input(i)).isDefined => //if it's a number
                     outputQueue.enqueue(input(i))
 
-
-
                 case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
+                    outputQueue.enqueue(input(i))
             }
         }
 
