@@ -12,7 +12,7 @@ case class Operator(lhs: Expression, operatorName: String, rhs: Expression) exte
   private def operatorByName(opName: String, lhs: Int, rhs: Int) = {
     if (opName == "+") lhs + rhs
     else if (opName == "*") lhs * rhs
-    else lhs / rhs
+    else lhs - rhs
   }
 
   override def toString: String = "(" + lhs.toString + operatorName + rhs.toString + ")"

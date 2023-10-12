@@ -5,8 +5,14 @@ import scala.collection.mutable.Stack
 object ReversePolish {
 
   def isNumber(s: String): Boolean = {
-    if (s.isEmpty) return false
-    for (c <- s.toCharArray) {
+    var sCopy = s
+    if(s.contains("-"))
+    {
+      sCopy = s.dropWhile(_ == '-')
+    }
+
+    if (sCopy.isEmpty) return false
+    for (c <- sCopy.toCharArray) {
       if (!c.isDigit) return false
     }
     return true
