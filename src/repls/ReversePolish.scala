@@ -19,6 +19,17 @@ object ReversePolish {
     return true
   }
 
+  def isVar(s: String): Boolean = {
+    if(s.isEmpty) return false
+
+    val isFirstCharLetter = s.headOption.exists(_.isLetter)
+    if(!isFirstCharLetter)
+    {
+      return false
+    }
+    return true
+  }
+
 
   // converts reverse polish string to expression tree
   //
@@ -27,14 +38,44 @@ object ReversePolish {
   //   => Operator(Operator(Constant(1), "*", Operator(repls.Const(3), "+", repls.Const(5)), "-", repls.Const(2)))
   def reversePolishToExpression(expression: String): Expression = {
     val s: Stack[Expression] = new Stack()
-    for (el <- expression.split(" ")) {
+    /*for (el <- expression.split(" ")) {
       if (isOperator(el)) {
         val rhs = s.pop
         val lhs = s.pop
         val res = Operator(lhs, el, rhs)
         s.push(res)
       } else if (isNumber(el)) s.push(Constant(el.toInt))
+      else if (isVar(el)) {
+        s.push(Var(el))
+
+      }
+      else if(el == "=") el continue
       else throw new Error("Unknown expression element " + el)
+    }*/
+    val elements = expression.split(" ")
+    var i = 0
+    while (i < elements.length)
+    {
+      if (isOperator(elements(i))) {
+        val rhs = s.pop
+        val lhs = s.pop
+        val res = Operator(lhs, elements(i), rhs)
+        s.push(res)
+      }
+      else if (isNumber(elements(i))) s.push(Constant(elements(i).toInt))
+      else if (isVar(elements(i)))
+      {
+        var elementVar = Var(elements(i))
+        s.push(elementVar)
+        if(elements(i + 1) == "=")
+        {
+          elementVar.newValue(elements(i + 2).toInt, elements(i))
+          i += 2
+        }
+      }
+      else if (elements(i) == "=") i = i
+      else throw new Error("Unknown expression element " + elements(i))
+      i += 1
     }
     s.top
   }

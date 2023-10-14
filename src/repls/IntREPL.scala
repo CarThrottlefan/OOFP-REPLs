@@ -12,14 +12,27 @@ class IntREPL extends REPLBase {
     var globalMap: Map[String,Int] = Map()
     var operatorStack = Stack[String]()
     var outputQueue = Queue[String]()
+    //var variableMap: Map[String, Int] = Map()
+    var newVar : Boolean = false
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "( 43 - ( 35 * 2 + ( 32 - ( 45 ) * 2 ) ) )".split("\\s")
+        //val elements = "n = 1".split("\\s")
         val queue = shuntingYard(elements)
         val expression = reversePolishFunc(queue)
         val result = expression.eval(globalMap)
-        val resultToString = result.toString
+        val resultToString: String =
+            if (globalMap == Map())
+                {
+                    result.toString
+                }
+            else
+                {
+                    var newString : String = ""
+                    globalMap = globalMap.updated(elements(0), result)
+                    newString = elements(0) + " = " + result.toString
+                    newString
+                }
 
         return resultToString
 
@@ -83,6 +96,19 @@ class IntREPL extends REPLBase {
                     outputQueue.enqueue(input(i))
 
                 case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
+                    //outputQueue.enqueue(input(i))
+                    if(globalMap.contains(input(i)))
+                    {
+                        outputQueue.enqueue(globalMap.get(input(i)).toString)
+                    }
+                    else
+                    {
+                        globalMap += (input(i) -> -1) //input(i) is the variable, -1 is a value which shows there are new vars without values in the map
+                        newVar = true
+                        outputQueue.enqueue(input(i))
+                    }
+
+                case "=" =>
                     outputQueue.enqueue(input(i))
             }
         }
