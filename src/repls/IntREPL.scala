@@ -12,12 +12,11 @@ class IntREPL extends REPLBase {
     var globalMap: Map[String,Int] = Map()
     var operatorStack = Stack[String]()
     var outputQueue = Queue[String]()
-    //var variableMap: Map[String, Int] = Map()
     var newVar : Boolean = false
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "@ 0 + x".split("\\s")
+        //val elements = "@ ( 4 * 4 ) * x ".split("\\s")
         //globalMap += ("n" -> -16)
         var resultToString = ""
         val patternMatch = PatternMatch

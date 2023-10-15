@@ -1,15 +1,46 @@
 package repls
 
+import scala.util.matching.Regex
+
 // examples
 // x
 object PatternMatch {
 
-  def operatorByName(l: Int, name: String, r: Int): Int = {
+  def operatorByName(l: String, name: String, r: String): String = {
+    val numberPattern: Regex = "[0-9]+".r
+    var returnString : String = ""
     name match {
-      case "+" => l + r
-      case "-" => l - r
-      case "*" => l * r
-      case "/" => l / r
+      case "+" =>
+        if (numberPattern.findFirstMatchIn(l).isDefined && numberPattern.findFirstMatchIn(r).isDefined) // l and r are numbers
+        {
+          returnString = (l.toInt + r.toInt).toString
+          returnString
+        }
+        else
+        {
+          returnString = l + " + " + r
+          returnString
+        }
+      case "-" =>
+        if (numberPattern.findFirstMatchIn(l).isDefined && numberPattern.findFirstMatchIn(r).isDefined) // l and r are numbers
+        {
+          returnString = (l.toInt - r.toInt).toString
+          returnString
+        }
+        else {
+          returnString = l + " - " + r
+          returnString
+        }
+      case "*" =>
+        if (numberPattern.findFirstMatchIn(l).isDefined && numberPattern.findFirstMatchIn(r).isDefined) // l and r are numbers
+        {
+          returnString = (l.toInt * r.toInt).toString
+          returnString
+        }
+        else {
+          returnString = l + " * " + r
+          returnString
+        }
     }
   }
 
@@ -20,7 +51,7 @@ object PatternMatch {
       case Var(s) if (!bindings.contains(s)) => s
       //case Negate(arg) => -eval(bindings, arg)
       case Operator(lhs, op, rhs) =>
-        operatorByName(eval(bindings, lhs).toInt, op, eval(bindings, rhs).toInt).toString
+        operatorByName(eval(bindings, lhs), op, eval(bindings, rhs))
     }
 
   // rules :
