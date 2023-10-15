@@ -18,10 +18,36 @@ class IntREPL extends REPLBase {
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
         //val elements = "n = 1".split("\\s")
-        val queue = shuntingYard(elements)
-        val expression = reversePolishFunc(queue)
-        val result = expression.eval(globalMap)
-        val resultToString: String =
+        var resultToString = ""
+        if(elements.contains("="))
+        {
+            val varName = elements.head
+            globalMap += (elements.head -> -1)
+            val queue = shuntingYard(elements.slice(2, elements.length))
+            val expression = reversePolishToExpr(queue)
+            val result = expression.eval(globalMap)
+            globalMap = globalMap.updated(varName, result)
+            resultToString = varName + " = " + result
+        }
+        else if (elements.head == ("@"))
+        {
+            val queue = shuntingYard((elements.slice(1, elements.length)))
+            val expression = reversePolishToExpr(queue)
+            //val result = simplify()
+
+        }
+        else
+        {
+            val queue = shuntingYard(elements)
+            val expression = reversePolishToExpr(queue)
+            val result = expression.eval(globalMap)
+            resultToString = result.toString
+        }
+
+        /*val queue = shuntingYard(elements)
+        val expression = reversePolishToExpr(queue)
+        val result = expression.eval(globalMap)*/
+        /*val resultToString: String =
             if (globalMap == Map())
                 {
                     result.toString
@@ -32,7 +58,7 @@ class IntREPL extends REPLBase {
                     globalMap = globalMap.updated(elements(0), result)
                     newString = elements(0) + " = " + result.toString
                     newString
-                }
+                }*/
 
         return resultToString
 
@@ -97,19 +123,10 @@ class IntREPL extends REPLBase {
 
                 case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
                     //outputQueue.enqueue(input(i))
-                    if(globalMap.contains(input(i)))
-                    {
-                        outputQueue.enqueue(globalMap.get(input(i)).toString)
-                    }
-                    else
-                    {
-                        globalMap += (input(i) -> -1) //input(i) is the variable, -1 is a value which shows there are new vars without values in the map
-                        newVar = true
-                        outputQueue.enqueue(input(i))
-                    }
+                    outputQueue.enqueue(globalMap.get(input(i)).toString)
 
-                case "=" =>
-                    outputQueue.enqueue(input(i))
+                /*case "@" =>
+                    outputQueue.enqueue(input(i))*/
             }
         }
 
@@ -121,7 +138,7 @@ class IntREPL extends REPLBase {
         outputQueue
     }
 
-    def reversePolishFunc(input: mutable.Queue[String]): Expression  = //repls.secondExpression =
+    def reversePolishToExpr(input: mutable.Queue[String]): Expression  = //repls.secondExpression =
         {
             var queueToString : String = ""
             for(i <- input.indices)
