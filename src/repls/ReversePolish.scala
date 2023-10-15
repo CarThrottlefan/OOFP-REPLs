@@ -62,11 +62,22 @@ object ReversePolish {
         val res = Operator(lhs, elements(i), rhs)
         s.push(res)
       }
-      else if (isNumber(elements(i))) s.push(Constant(elements(i).toInt))
+      else if (isNumber(elements(i)))
+      {
+        val constantValue = Constant(elements(i).toInt)
+        s.push(constantValue)
+      }
       else if (isVar(elements(i)))
       {
-        val variableVal = varMap(elements(i))
-        s.push(Constant(variableVal))
+        if(varMap.contains(elements(i)))
+        {
+          val variableVal = varMap(elements(i))
+          s.push(Constant(variableVal))
+        }
+        else
+        {
+          s.push(Var(elements(i)))
+        }
       }
       else throw new Error("Unknown expression element " + elements(i))
       i += 1

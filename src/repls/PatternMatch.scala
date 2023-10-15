@@ -13,13 +13,14 @@ object PatternMatch {
     }
   }
 
-  def eval(bindings: Map[String, Int], exp: Expression): Int =
+  def eval(bindings: Map[String, Int], exp: Expression): String =
     exp match {
-      case Constant(i) => i
-      case Var(s) => bindings(s)
+      case Constant(i) => i.toString
+      case Var(s) if (bindings.contains(s)) => bindings(s).toString
+      case Var(s) if (!bindings.contains(s)) => s
       //case Negate(arg) => -eval(bindings, arg)
       case Operator(lhs, op, rhs) =>
-        operatorByName(eval(bindings, lhs), op, eval(bindings, rhs))
+        operatorByName(eval(bindings, lhs).toInt, op, eval(bindings, rhs).toInt).toString
     }
 
   // rules :
@@ -30,7 +31,12 @@ object PatternMatch {
     exp match {
       //case Negate(Negate(e)) => simplify(e)
       case Operator(e, "+", Constant(0)) => simplify(e)
+      case Operator(Constant(0), "+", e) => simplify(e)
       case Operator(e, "*", Constant(1)) => simplify(e)
+      case Operator(Constant(1), "*", e) => simplify(e)
+      case Operator(e, "*", Constant(0)) => simplify(e)
+      case Operator(Constant(0), "*", e) => simplify(e)
+      //case Operator(e, "-", e) => simplify(e)
       //case Negate(e) => Negate(simplify(e))
       case Operator(l, op, r) => Operator(simplify(l), op, simplify(r))
       case _ => exp

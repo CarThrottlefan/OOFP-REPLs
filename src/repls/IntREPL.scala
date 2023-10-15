@@ -17,9 +17,10 @@ class IntREPL extends REPLBase {
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "n = n + 4".split("\\s")
+        //val elements = "@ 0 + x".split("\\s")
         //globalMap += ("n" -> -16)
         var resultToString = ""
+        val patternMatch = PatternMatch
         if(elements.contains("="))
         {
             val varName = elements.head
@@ -29,23 +30,27 @@ class IntREPL extends REPLBase {
             }
             val queue = shuntingYard(elements.slice(2, elements.length))
             val expression = reversePolishToExpr(queue)
-            val result = expression.eval(globalMap)
-            globalMap = globalMap.updated(varName, result)
+            //val result = expression.eval(globalMap)
+            val result = patternMatch.eval(globalMap, expression)
+            globalMap = globalMap.updated(varName, result.toInt)
             resultToString = varName + " = " + result
         }
         else if (elements.head == ("@"))
         {
             val queue = shuntingYard((elements.slice(1, elements.length)))
             val expression = reversePolishToExpr(queue)
+            val patternMatch = PatternMatch
+            val simplified = patternMatch.simplify(expression)
+            val result = patternMatch.eval(globalMap, simplified)
+            resultToString = result
             //val result = simplify()
-
         }
         else
         {
             val queue = shuntingYard(elements)
             val expression = reversePolishToExpr(queue)
-            val result = expression.eval(globalMap)
-            resultToString = result.toString
+            val result = patternMatch.eval(globalMap, expression)
+            resultToString = result
         }
 
         /*val queue = shuntingYard(elements)
@@ -127,7 +132,12 @@ class IntREPL extends REPLBase {
 
                 case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
                     //outputQueue.enqueue(input(i))
-                    outputQueue.enqueue(globalMap(input(i)).toString)
+                    if(globalMap.contains(input(i)))
+                    {
+                        outputQueue.enqueue(globalMap(input(i)).toString)
+                    }
+                    else
+                        outputQueue.enqueue(input(i))
 
                 /*case "@" =>
                     outputQueue.enqueue(input(i))*/
