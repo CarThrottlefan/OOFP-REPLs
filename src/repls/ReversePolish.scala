@@ -36,7 +36,7 @@ object ReversePolish {
   // example :
   //   "1 3 5 + * 2 -"
   //   => Operator(Operator(Constant(1), "*", Operator(repls.Const(3), "+", repls.Const(5)), "-", repls.Const(2)))
-  def reversePolishToExpression(expression: String): Expression = {
+  def reversePolishToExpression(expression: String, varMap: Map[String, Int]): Expression = {
     val s: Stack[Expression] = new Stack()
     /*for (el <- expression.split(" ")) {
       if (isOperator(el)) {
@@ -65,13 +65,8 @@ object ReversePolish {
       else if (isNumber(elements(i))) s.push(Constant(elements(i).toInt))
       else if (isVar(elements(i)))
       {
-        var elementVar = Var(elements(i))
-        s.push(elementVar)
-        if(elements(i + 1) == "=")
-        {
-          elementVar.newValue(elements(i + 2).toInt, elements(i))
-          i += 2
-        }
+        val variableVal = varMap(elements(i))
+        s.push(Constant(variableVal))
       }
       else if (elements(i) == "=") i = i
       else throw new Error("Unknown expression element " + elements(i))

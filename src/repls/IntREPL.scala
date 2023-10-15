@@ -17,7 +17,7 @@ class IntREPL extends REPLBase {
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "n = 1".split("\\s")
+        //val elements = "n = -16".split("\\s")
         var resultToString = ""
         if(elements.contains("="))
         {
@@ -147,7 +147,7 @@ class IntREPL extends REPLBase {
             }
             queueToString = queueToString.trim //removes the additional whitespace at the end
 
-            val expression : Expression = ReversePolish.reversePolishToExpression(queueToString)
+            val expression : Expression = ReversePolish.reversePolishToExpression(queueToString, globalMap)
             expression
         }
 }
