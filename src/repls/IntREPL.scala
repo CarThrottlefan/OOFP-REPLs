@@ -17,13 +17,16 @@ class IntREPL extends REPLBase {
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "m = n + 4".split("\\s")
-        //globalMap += ("n" -> 21)
+        //val elements = "n = n + 4".split("\\s")
+        //globalMap += ("n" -> -16)
         var resultToString = ""
         if(elements.contains("="))
         {
             val varName = elements.head
-            globalMap += (elements.head -> -1)
+            if(!globalMap.contains(varName))
+            {
+                globalMap += (elements.head -> -1)
+            }
             val queue = shuntingYard(elements.slice(2, elements.length))
             val expression = reversePolishToExpr(queue)
             val result = expression.eval(globalMap)
