@@ -17,7 +17,8 @@ class IntREPL extends REPLBase {
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "n = -16".split("\\s")
+        //val elements = "m = n + 4".split("\\s")
+        //globalMap += ("n" -> 21)
         var resultToString = ""
         if(elements.contains("="))
         {
@@ -123,7 +124,7 @@ class IntREPL extends REPLBase {
 
                 case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
                     //outputQueue.enqueue(input(i))
-                    outputQueue.enqueue(globalMap.get(input(i)).toString)
+                    outputQueue.enqueue(globalMap(input(i)).toString)
 
                 /*case "@" =>
                     outputQueue.enqueue(input(i))*/

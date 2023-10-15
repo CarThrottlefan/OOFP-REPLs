@@ -68,7 +68,6 @@ object ReversePolish {
         val variableVal = varMap(elements(i))
         s.push(Constant(variableVal))
       }
-      else if (elements(i) == "=") i = i
       else throw new Error("Unknown expression element " + elements(i))
       i += 1
     }
