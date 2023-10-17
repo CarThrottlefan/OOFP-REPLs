@@ -7,15 +7,14 @@ import scala.util.matching.Regex
 object PatternMatch {
 
   def operatorByName(l: Int, name: String, r: Int): Int = {
-    val numberPattern: Regex = "[0-9]+".r
     var returnInt : Int = 0
 
     name match {
       case "+" =>
-          returnInt = l.toInt + r.toInt
+          returnInt = l + r
           returnInt
       case "-" =>
-          returnInt = l.toInt - r.toInt
+          returnInt = l - r
           returnInt
       case "*" =>
           returnInt = l * r
@@ -53,7 +52,9 @@ object PatternMatch {
       case Operator(Operator(b, "*", a1), "+", Operator(c, "*", a2)) if (a1 == a2) => Operator(a1, "*", Operator(b, "+", c))
       //case Operator(e, "-", e) => simplify(e)
       //case Negate(e) => Negate(simplify(e))
+      case Operator(Constant(value1), op, Constant(value2)) => Constant(operatorByName(value1, op, value2))
       case Operator(l, op, r) => Operator(simplify(l), op, simplify(r))
+      //case Constant(value) => Constant(value)
       case _ => exp
     }
 }

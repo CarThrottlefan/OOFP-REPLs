@@ -1,6 +1,7 @@
 package repls
 
 import scala.collection.mutable.Stack
+import scala.util.matching.Regex
 
 object ReversePolish {
 
@@ -37,6 +38,7 @@ object ReversePolish {
   //   "1 3 5 + * 2 -"
   //   => Operator(Operator(Constant(1), "*", Operator(repls.Const(3), "+", repls.Const(5)), "-", repls.Const(2)))
   def reversePolishToExpression(expression: String, varMap: Map[String, Int]): Expression = {
+    val numberPattern: Regex = "[0-9]+".r
     val s: Stack[Expression] = new Stack()
     /*for (el <- expression.split(" ")) {
       if (isOperator(el)) {
