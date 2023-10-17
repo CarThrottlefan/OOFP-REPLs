@@ -6,5 +6,7 @@ abstract class Expression {
 
   def describe: String =
     "The value of " + toString + " is " + value.toString
+
+  def toString : String
 }
 

@@ -6,7 +6,7 @@ case class Operator(lhs: Expression, operatorName: String, rhs: Expression) exte
   override def eval(bindings: Map[String, Int]): Int = {
     val l = lhs.eval(bindings)
     val r = rhs.eval(bindings)
-    PatternMatch.operatorByName(l.toString, operatorName, r.toString).toInt
+    PatternMatch.operatorByName(l, operatorName, r).toInt
   }
 
   private def operatorByName(opName: String, lhs: Int, rhs: Int) = {
@@ -15,5 +15,5 @@ case class Operator(lhs: Expression, operatorName: String, rhs: Expression) exte
     else lhs - rhs
   }
 
-  override def toString: String = "Operator(" + lhs.toString + operatorName + rhs.toString + ")"
+  override def toString: String = lhs.toString + " " + operatorName + " " + rhs.toString
 }

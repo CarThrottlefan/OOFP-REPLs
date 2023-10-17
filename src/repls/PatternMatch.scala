@@ -6,52 +6,28 @@ import scala.util.matching.Regex
 // x
 object PatternMatch {
 
-  def operatorByName(l: String, name: String, r: String): String = {
+  def operatorByName(l: Int, name: String, r: Int): Int = {
     val numberPattern: Regex = "[0-9]+".r
-    var returnString : String = ""
+    var returnInt : Int = 0
 
     name match {
       case "+" =>
-        if (numberPattern.findFirstMatchIn(l).isDefined && numberPattern.findFirstMatchIn(r).isDefined) // l and r are numbers -> returns a numerical value
-        {
-          returnString = (l.toInt + r.toInt).toString
-          returnString
-        }
-        else // returns a string containing the unbounded var
-        {
-          returnString = l + " + " + r
-          returnString
-        }
+          returnInt = l.toInt + r.toInt
+          returnInt
       case "-" =>
-        if (numberPattern.findFirstMatchIn(l).isDefined && numberPattern.findFirstMatchIn(r).isDefined)
-        {
-          returnString = (l.toInt - r.toInt).toString
-          returnString
-        }
-        else
-        {
-          returnString = l + " - " + r
-          returnString
-        }
+          returnInt = l.toInt - r.toInt
+          returnInt
       case "*" =>
-        if (numberPattern.findFirstMatchIn(l).isDefined && numberPattern.findFirstMatchIn(r).isDefined) // l and r are numbers
-        {
-          returnString = (l.toInt * r.toInt).toString
-          returnString
-        }
-        else
-        {
-          returnString = l + " * " + r
-          returnString
-        }
+          returnInt = l * r
+          returnInt
     }
   }
 
-  def eval(bindings: Map[String, Int], exp: Expression): String =
+  def eval(bindings: Map[String, Int], exp: Expression): Int =
     exp match {
-      case Constant(i) => i.toString
-      case Var(s) if (bindings.contains(s)) => bindings(s).toString
-      case Var(s) if (!bindings.contains(s)) => s
+      case Constant(i) => i
+      case Var(s) if (bindings.contains(s)) => bindings(s)
+      //case Var(s) if (!bindings.contains(s)) => s
       //case Negate(arg) => -eval(bindings, arg)
       case Operator(lhs, op, rhs) =>
         operatorByName(eval(bindings, lhs), op, eval(bindings, rhs))

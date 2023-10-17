@@ -31,7 +31,7 @@ class IntREPL extends REPLBase {
             val expression = reversePolishToExpr(queue)
             //val result = expression.eval(globalMap)
             val result = patternMatch.eval(globalMap, expression)
-            globalMap = globalMap.updated(varName, result.toInt)
+            globalMap = globalMap.updated(varName, result)
             resultToString = varName + " = " + result
         }
         else if (elements.head == ("@"))
@@ -39,9 +39,9 @@ class IntREPL extends REPLBase {
             val queue = shuntingYard((elements.slice(1, elements.length)))
             val expression = reversePolishToExpr(queue)
             val patternMatch = PatternMatch
-            val simplified = patternMatch.simplify(expression)
-            val result = patternMatch.eval(globalMap, simplified)
-            resultToString = result
+            val simplified: Expression = patternMatch.simplify(expression)
+            //val result = patternMatch.eval(globalMap, simplified)
+            resultToString = simplified.toString
             //val result = simplify()
         }
         else
@@ -49,7 +49,7 @@ class IntREPL extends REPLBase {
             val queue = shuntingYard(elements)
             val expression = reversePolishToExpr(queue)
             val result = patternMatch.eval(globalMap, expression)
-            resultToString = result
+            resultToString = result.toString
         }
 
         /*val queue = shuntingYard(elements)

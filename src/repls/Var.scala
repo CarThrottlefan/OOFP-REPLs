@@ -20,4 +20,9 @@ case class Var(s: String) extends Expression {
     //listOfUpdates = listOfUpdates :+ key
     _defMap = _defMap + (key -> newVal)
   }
+
+  override def toString : String =
+    {
+      s
+    }
 }
