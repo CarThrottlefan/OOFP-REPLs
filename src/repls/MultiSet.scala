@@ -42,7 +42,15 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
         The order of the elements in the sequence does not matter.
      */
     def toSeq: Seq[T] = {
-        Seq.empty
+        var retSeq: Seq[T] = Seq()
+        multiplicity.foreach{
+            case (element, count) =>
+            for(i <- 1 to count)
+            {
+                retSeq = retSeq :+ element
+            }
+        }
+        retSeq
     }
 
     val MaxCountForDuplicatePrint = 5
@@ -67,5 +75,22 @@ object MultiSet {
     /* TODO
         Write a constructor that constructs a multiset from a sequence of elements
      */
-    def apply[T](elements: Seq[T]): MultiSet[T] = empty[T]
+    def apply[T](elements: Seq[T]): MultiSet[T] = {
+        var keyList:Map[T,Int] = Map();
+        elements.foreach(elements =>
+        {
+            if(keyList.contains(elements))
+            {
+                var currVal = keyList(elements)
+                currVal += 1
+                keyList = keyList.updated(elements, currVal)
+            }
+            else
+            {
+                keyList = keyList + (elements -> 1)
+            }
+        })
+        val set = new MultiSet(keyList)
+        set
+    }
 }
