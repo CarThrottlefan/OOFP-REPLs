@@ -39,21 +39,30 @@ object PatternMatch {
   def simplify(exp: Expression): Expression =
     exp match {
       //case Negate(Negate(e)) => simplify(e)
-      case Operator(e, "+", Constant(0)) => simplify(e)
-      case Operator(Constant(0), "+", e) => simplify(e)
-      case Operator(e, "*", Constant(1)) => simplify(e)
-      case Operator(Constant(1), "*", e) => simplify(e)
-      case Operator(e, "*", Constant(0)) => Constant(0)
-      case Operator(Constant(0), "*", e) => Constant(0)
-      case Operator(e1, "-", e2) if (e1 == e2) => Constant(0)
-      case Operator(Operator(a1, "*", b), "+", Operator(a2, "*", c)) if (a1 == a2) => Operator(a1, "*", Operator(b, "+", c))
-      case Operator(Operator(b, "*", a1), "+", Operator(a2, "*", c)) if (a1 == a2) => Operator(a1, "*", Operator(b, "+", c))
-      case Operator(Operator(a1, "*", b), "+", Operator(c, "*", a2)) if (a1 == a2) => Operator(a1, "*", Operator(b, "+", c))
-      case Operator(Operator(b, "*", a1), "+", Operator(c, "*", a2)) if (a1 == a2) => Operator(a1, "*", Operator(b, "+", c))
+
       //case Operator(e, "-", e) => simplify(e)
       //case Negate(e) => Negate(simplify(e))
-      case Operator(Constant(value1), op, Constant(value2)) => Constant(operatorByName(value1, op, value2))
-      case Operator(l, op, r) => Operator(simplify(l), op, simplify(r))
+
+      case Operator(l, op, r) =>
+        val bottomExp = Operator(simplify(l), op, simplify(r))
+
+        bottomExp match
+        {
+          case Operator(Constant(value1), op, Constant(value2)) => Constant(operatorByName(value1, op, value2))
+          case Operator(e, "+", Constant(0)) => simplify(e)
+          case Operator(Constant(0), "+", e) => simplify(e)
+          case Operator(e, "*", Constant(1)) => simplify(e)
+          case Operator(Constant(1), "*", e) => simplify(e)
+          case Operator(e, "*", Constant(0)) => Constant(0)
+          case Operator(Constant(0), "*", e) => Constant(0)
+          case Operator(e1, "-", e2) if e1 == e2 => Constant(0)
+          case Operator(Operator(a1, "*", b), "+", Operator(a2, "*", c)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
+          case Operator(Operator(b, "*", a1), "+", Operator(a2, "*", c)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
+          case Operator(Operator(a1, "*", b), "+", Operator(c, "*", a2)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
+          case Operator(Operator(b, "*", a1), "+", Operator(c, "*", a2)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
+          case _ => bottomExp
+        }
+
       //case Constant(value) => Constant(value)
       case _ => exp
     }

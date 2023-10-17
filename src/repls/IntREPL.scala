@@ -16,7 +16,7 @@ class IntREPL extends REPLBase {
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "@ ( 4 * 4 ) * x ".split("\\s")
+        //val elements = "@ ( x * 0 ) + ( y * 2 )".split("\\s")
         //globalMap += ("n" -> -16)
         var resultToString = ""
         val patternMatch = PatternMatch
