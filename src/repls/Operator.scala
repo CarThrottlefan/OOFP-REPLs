@@ -19,11 +19,11 @@ case class Operator(lhs: Expression, operatorName: String, rhs: Expression) exte
   override def toString: String =
      this match {
        case Operator(Operator(a, op1, b), operatorName, Operator(c, op2, d)) =>
-         if((op1 == "+" || op1 == "-") && op2 == "*")
+         if((op1 == "+" || op1 == "-") && (op2 == "+" || op2 == "-") && operatorName == "*")
          {
-           "( " + a.toString + " " + op1 + " " + b.toString + " ) " + operatorName + " " + c.toString + " " + op2 + " " + d.toString
+           "( " + a.toString + " " + op1 + " " + b.toString + " ) " + operatorName + " ( " + c.toString + " " + op2 + " " + d.toString + " )"
          }
-         else if (op1 == "*" && (op2 == "+"  || op2 == "-"))
+         else if (operatorName == "*"  && (op2 == "+"  || op2 == "-"))
          {
            a.toString + " " + op1 + " " + b.toString + " " + operatorName + " ( " + c.toString + " " + op2 + " " + d.toString + " )"
          }

@@ -56,10 +56,10 @@ object PatternMatch {
           case Operator(e, "*", Constant(0)) => Constant(0)
           case Operator(Constant(0), "*", e) => Constant(0)
           case Operator(e1, "-", e2) if e1 == e2 => Constant(0)
-          case Operator(Operator(a1, "*", b), "+", Operator(a2, "*", c)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
-          case Operator(Operator(b, "*", a1), "+", Operator(a2, "*", c)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
-          case Operator(Operator(a1, "*", b), "+", Operator(c, "*", a2)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
-          case Operator(Operator(b, "*", a1), "+", Operator(c, "*", a2)) if a1 == a2 => Operator(a1, "*", Operator(b, "+", c))
+          case Operator(Operator(a1, "*", b), "+", Operator(a2, "*", c)) if a1 == a2 => simplify(Operator(a1, "*", Operator(b, "+", c)))
+          case Operator(Operator(b, "*", a1), "+", Operator(a2, "*", c)) if a1 == a2 => simplify(Operator(a1, "*", Operator(b, "+", c)))
+          case Operator(Operator(a1, "*", b), "+", Operator(c, "*", a2)) if a1 == a2 => simplify(Operator(a1, "*", Operator(b, "+", c)))
+          case Operator(Operator(b, "*", a1), "+", Operator(c, "*", a2)) if a1 == a2 => simplify(Operator(a1, "*", Operator(b, "+", c)))
           case _ => bottomExp
         }
 
