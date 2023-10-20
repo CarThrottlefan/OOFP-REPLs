@@ -15,12 +15,42 @@ class MultiSetREPL extends REPLBase {
 
     override def readEval(command: String): String = {
         // TODO: complete me!
+        var resultToString = ""
         val elements = command.split("\\s")
         //val elements = "{a,b,c}".split("\\s")
-        val queue = shuntingYard(elements)
+        /*val queue = shuntingYard(elements)
         val expression = reversePolishToExpr(queue)
         val result = SetPatternMatch.SetEval(globalMap, expression)
-        val resultToString = result.toString
+        resultToString = result.toString
+        resultToString*/
+
+        if (elements.contains("=")) {
+            val varName = elements.head
+            /*if (!globalMap.contains(varName)) { //TODO FIX this for sets
+                globalMap += (elements.head -> -1)
+            }*/
+            val queue = shuntingYard(elements.slice(2, elements.length))
+            val expression = reversePolishToExpr(queue)
+            //val result = expression.eval(globalMap)
+            val result = SetPatternMatch.SetEval(globalMap, expression)
+            globalMap = globalMap.updated(varName, result)
+            resultToString = varName + " = " + result
+        }
+        else if (elements.head == "@") {
+            val queue = shuntingYard((elements.slice(1, elements.length)))
+            val expression = reversePolishToExpr(queue)
+            val patternMatch = SetPatternMatch
+            val simplified: SetExpression = patternMatch.SetSimplify(expression)
+            //val result = patternMatch.eval(globalMap, simplified)
+            resultToString = simplified.toString
+            //val result = simplify()
+        }
+        else {
+            val queue = shuntingYard(elements)
+            val expression = reversePolishToExpr(queue)
+            val result = SetPatternMatch.SetEval(globalMap, expression)
+            resultToString = result.toString
+        }
         resultToString
     }
 
