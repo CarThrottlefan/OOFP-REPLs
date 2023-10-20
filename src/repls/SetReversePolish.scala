@@ -3,22 +3,7 @@ package repls
 import scala.collection.mutable.Stack
 import scala.util.matching.Regex
 
-object ReversePolish {
-
-  def isNumber(s: String): Boolean = {
-    var sCopy = s
-
-    if(s.contains("-"))
-    {
-      sCopy = s.dropWhile(_ == '-')
-    }
-
-    if (sCopy.isEmpty) return false
-    for (c <- sCopy.toCharArray) {
-      if (!c.isDigit) return false
-    }
-    return true
-  }
+object SetReversePolish {
 
   def isVar(s: String): Boolean = {
     if(s.isEmpty) return false
@@ -31,13 +16,25 @@ object ReversePolish {
     return true
   }
 
+  def isSet(s: String): Boolean =
+  {
+    if(s.isEmpty) return false
+    val isFirstCharBracket = s.headOption.contains('{')
+    if (!isFirstCharBracket)
+    {
+      return false
+    }
+    return true
+  }
+
+
   // converts reverse polish string to expression tree
   //
   // example :
   //   "1 3 5 + * 2 -"
   //   => SetOperator(SetOperator(Constant(1), "*", SetOperator(repls.Const(3), "+", repls.Const(5)), "-", repls.Const(2)))
-  def reversePolishToExpression(expression: String, varMap: Map[String, Int]): Expression = {
-    val s: Stack[Expression] = new Stack()
+  def reversePolishToExpression(expression: String, varMap: Map[String, MultiSet[String]]): SetExpression = {
+    val s: Stack[SetExpression] = new Stack()
     /*for (el <- expression.split(" ")) {
       if (isOperator(el)) {
         val rhs = s.pop
@@ -59,24 +56,24 @@ object ReversePolish {
       if (isOperator(elements(i))) {
         val rhs = s.pop
         val lhs = s.pop
-        val res = Operator(lhs, elements(i), rhs)
+        val res = SetOperator(lhs, elements(i), rhs)
         s.push(res)
       }
-      else if (isNumber(elements(i)))
+      else if (isSet(elements(i)))
       {
-        val constantValue = Constant(elements(i).toInt)
-        s.push(constantValue)
+        //val constantValue = SetConstant(MultiSet[String](elements(i)))
+        //s.push(constantValue)
       }
       else if (isVar(elements(i)))
       {
         if(varMap.contains(elements(i)))
         {
           val variableVal = varMap(elements(i))
-          s.push(Constant(variableVal))
+          s.push(SetConstant(variableVal))
         }
         else
         {
-          s.push(Var(elements(i)))
+          s.push(SetVar(elements(i)))
         }
       }
       else throw new Error("Unknown expression element " + elements(i))

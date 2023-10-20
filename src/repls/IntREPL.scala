@@ -12,7 +12,6 @@ class IntREPL extends REPLBase {
     var globalMap: Map[String,Int] = Map()
     var operatorStack = Stack[String]()
     var outputQueue = Queue[String]()
-    var newVar : Boolean = false
 
     override def readEval(command: String): String = {
         val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
@@ -137,9 +136,6 @@ class IntREPL extends REPLBase {
                     }
                     else
                         outputQueue.enqueue(input(i))
-
-                /*case "@" =>
-                    outputQueue.enqueue(input(i))*/
             }
         }
 
@@ -148,19 +144,19 @@ class IntREPL extends REPLBase {
             val topOfStack = operatorStack.pop()
             outputQueue.enqueue(topOfStack)
         }
-        outputQueue
+    outputQueue
     }
 
     def reversePolishToExpr(input: mutable.Queue[String]): Expression  = //repls.secondExpression =
+    {
+        var queueToString : String = ""
+        for(i <- input.indices)
         {
-            var queueToString : String = ""
-            for(i <- input.indices)
-            {
-                queueToString += input(i) + " "
-            }
-            queueToString = queueToString.trim //removes the additional whitespace at the end
-
-            val expression : Expression = ReversePolish.reversePolishToExpression(queueToString, globalMap)
-            expression
+            queueToString += input(i) + " "
         }
+        queueToString = queueToString.trim //removes the additional whitespace at the end
+
+        val expression : Expression = ReversePolish.reversePolishToExpression(queueToString, globalMap)
+        expression
+    }
 }

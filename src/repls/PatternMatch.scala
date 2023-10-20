@@ -40,7 +40,7 @@ object PatternMatch {
     exp match {
       //case Negate(Negate(e)) => simplify(e)
 
-      //case Operator(e, "-", e) => simplify(e)
+      //case SetOperator(e, "-", e) => simplify(e)
       //case Negate(e) => Negate(simplify(e))
 
       case Operator(l, op, r) =>
