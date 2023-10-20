@@ -15,13 +15,13 @@ class MultiSetREPL extends REPLBase {
 
     override def readEval(command: String): String = {
         // TODO: complete me!
-        //val elements = command.split("\\s")
-        val elements = "{a,b,c} + {d,c,e}".split("\\s")
+        val elements = command.split("\\s")
+        //val elements = "{a,b,c}".split("\\s")
         val queue = shuntingYard(elements)
         val expression = reversePolishToExpr(queue)
         val result = SetPatternMatch.SetEval(globalMap, expression)
         val resultToString = result.toString
-        ""
+        resultToString
     }
 
     def shuntingYard(input: Array[String]): Queue[String] = {

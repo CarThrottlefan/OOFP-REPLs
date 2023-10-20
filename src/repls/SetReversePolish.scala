@@ -61,8 +61,11 @@ object SetReversePolish {
       }
       else if (isSet(elements(i)))
       {
-        //val constantValue = SetConstant(MultiSet[String](elements(i)))
-        //s.push(constantValue)
+        var listOfElem : List[String] = List()
+        elements(i).foreach(letter => if(letter != '{' && letter != '}' && letter != ',') listOfElem = listOfElem :+ letter.toString)
+        val newSet: MultiSet[String] = MultiSet[String](listOfElem)
+        val constantValue = SetConstant(newSet)
+        s.push(constantValue)
       }
       else if (isVar(elements(i)))
       {
