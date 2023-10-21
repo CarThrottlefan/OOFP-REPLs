@@ -17,7 +17,7 @@ class MultiSetREPL extends REPLBase {
         // TODO: complete me!
         var resultToString = ""
         val elements = command.split("\\s")
-        //val elements = "{a,b,c}".split("\\s")
+        //val elements = "( ( {a,b,c} - {a} ) - {a,b} ) - {m,n}".split("\\s")
         /*val queue = shuntingYard(elements)
         val expression = reversePolishToExpr(queue)
         val result = SetPatternMatch.SetEval(globalMap, expression)
@@ -91,7 +91,7 @@ class MultiSetREPL extends REPLBase {
                         }
                         operatorStack.push(input(i))
                     }
-                case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
+                case _ if letterPattern.findFirstMatchIn(input(i)).isDefined && !input(i).contains(',') => //if it's a var
                     if (globalMap.contains(input(i)))
                     {
                         outputQueue.enqueue(globalMap(input(i)).toString)
@@ -99,6 +99,8 @@ class MultiSetREPL extends REPLBase {
                     else
                         outputQueue.enqueue(input(i))
 
+                case _ =>
+                    outputQueue.enqueue(input(i))
             }
         }
 

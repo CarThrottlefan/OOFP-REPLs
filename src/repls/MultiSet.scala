@@ -72,6 +72,8 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
                     val valueMap2 = that.multiplicity(elements)
                     val max = (valueMap1 - valueMap2).max(0)
                     returnMap += (elements -> max)
+                    if(returnMap(elements) == 0)
+                        returnMap = returnMap.removed(elements)
                 }
                 else
                 {
@@ -108,10 +110,16 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
             val count = multiplicity(elem)
             if(count >= MaxCountForDuplicatePrint)
                 elem.toString + " -> " + count.toString
-            else Seq.fill(count)(elem).mkString(",")
+            else if(count > 0)
+                Seq.fill(count)(elem).mkString(",")
+            else
+                Seq.fill(count)(elem).mkString("")
         }
         val keyStringSet = multiplicity.keySet.map(elemToString)
-        "{" + keyStringSet.toSeq.sorted.mkString(",") + "}"
+        if(keyStringSet.nonEmpty)
+            "{" + keyStringSet.toSeq.sorted.mkString(",") + "}"
+        else
+            "{" + "}"
     }
 
 
