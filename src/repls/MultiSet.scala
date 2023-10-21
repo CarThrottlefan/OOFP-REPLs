@@ -27,6 +27,8 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
             val valueMap2 = that.multiplicity(elements)
             val min : Int = valueMap1.min(valueMap2)
             returnMap += (elements -> min)
+            if(returnMap(elements) == 0)
+                returnMap = returnMap.removed(elements)
             }
         }
         val set = new MultiSet(returnMap)
@@ -116,6 +118,7 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
                 Seq.fill(count)(elem).mkString("")
         }
         val keyStringSet = multiplicity.keySet.map(elemToString)
+
         if(keyStringSet.nonEmpty)
             "{" + keyStringSet.toSeq.sorted.mkString(",") + "}"
         else
