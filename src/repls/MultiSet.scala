@@ -108,24 +108,16 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
 
     // A toString has already been provided
     override def toString: String = {
-        def elemToString(elem : T) : String = {
+        def elemToString(elem: T): String = {
             val count = multiplicity(elem)
-            if(count >= MaxCountForDuplicatePrint)
+            if (count >= MaxCountForDuplicatePrint)
                 elem.toString + " -> " + count.toString
-            else if(count > 0)
-                Seq.fill(count)(elem).mkString(",")
-            else
-                Seq.fill(count)(elem).mkString("")
+            else Seq.fill(count)(elem).mkString(",")
         }
+
         val keyStringSet = multiplicity.keySet.map(elemToString)
-
-        if(keyStringSet.nonEmpty)
-            "{" + keyStringSet.toSeq.sorted.mkString(",") + "}"
-        else
-            "{" + "}"
+        "{" + keyStringSet.toSeq.sorted.mkString(",") + "}"
     }
-
-
 }
 
 object MultiSet {

@@ -49,14 +49,14 @@ object SetPatternMatch {
         bottomExp match
         {
           case SetOperator(e1, "*", e2) if e1 == e2 => SetSimplify(e1)
-          case SetOperator(SetConstant(value), "*", e) if value.multiplicity.size == 1 => //basically if the set is empty
+          case SetOperator(SetConstant(value), "*", e) if value.multiplicity.size == 1 && value.multiplicity.contains("") => //basically if the set is empty
             val newSet = MultiSet.empty[String]
             SetConstant(newSet)
-          case SetOperator(e, "*", SetConstant(value)) if value.multiplicity.size == 1 =>
+          case SetOperator(e, "*", SetConstant(value)) if value.multiplicity.size == 1 && value.multiplicity.contains("") =>
             val newSet = MultiSet.empty[String]
             SetConstant(newSet)
-          case SetOperator(SetConstant(value), "+", e) if value.multiplicity.size == 1 => SetSimplify(e)
-          case SetOperator(e, "+", SetConstant(value)) if value.multiplicity.size == 1 => SetSimplify(e)
+          case SetOperator(SetConstant(value), "+", e) if value.multiplicity.size == 1 && value.multiplicity.contains("") => SetSimplify(e)
+          case SetOperator(e, "+", SetConstant(value)) if value.multiplicity.size == 1 && value.multiplicity.contains("") => SetSimplify(e)
           case SetOperator(e1, "-", e2) if e1 == e2 =>
             val newSet = MultiSet.empty[String]
             SetConstant(newSet)
