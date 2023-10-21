@@ -62,7 +62,7 @@ object SetReversePolish {
       else if (isSet(elements(i)))
       {
         elements(i) = elements(i).drop(1).dropRight(1)
-        var listOfElem : Array[String] = elements(i).split(",")
+        val listOfElem: Array[String] = elements(i).split(",")
         val newSet: MultiSet[String] = MultiSet[String](listOfElem)
         val constantValue = SetConstant(newSet)
         s.push(constantValue)

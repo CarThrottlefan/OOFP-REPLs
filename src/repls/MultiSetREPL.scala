@@ -26,9 +26,9 @@ class MultiSetREPL extends REPLBase {
 
         if (elements.contains("=")) {
             val varName = elements.head
-            /*if (!globalMap.contains(varName)) { //TODO FIX this for sets
-                globalMap += (elements.head -> -1)
-            }*/
+            if (!globalMap.contains(varName)) {
+                globalMap += (elements.head -> MultiSet.empty[String])
+            }
             val queue = shuntingYard(elements.slice(2, elements.length))
             val expression = reversePolishToExpr(queue)
             //val result = expression.eval(globalMap)

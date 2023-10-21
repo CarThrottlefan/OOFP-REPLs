@@ -29,7 +29,9 @@ object SetPatternMatch {
       //case Var(s) if (!bindings.contains(s)) => s
       //case Negate(arg) => -eval(bindings, arg)
       case SetOperator(lhs, op, rhs) =>
-        SetOperatorByName(SetEval(bindings, lhs), op, SetEval(bindings, rhs))
+        var newSet = MultiSet.empty[String]
+        newSet = SetOperatorByName(SetEval(bindings, lhs), op, SetEval(bindings, rhs))
+        newSet
     }
 
   // rules :

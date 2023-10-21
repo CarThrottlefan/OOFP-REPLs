@@ -56,10 +56,13 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
     that.multiplicity.foreach
     {
         case(elements, valueMap2) =>
-            if(returnMap.contains(elements))
-                returnMap = returnMap.updated(elements, returnMap(elements) + valueMap2)
-            else
-                returnMap += (elements -> valueMap2)
+            if(elements.toString != "" && valueMap2 > 0)
+            {
+                if(returnMap.contains(elements))
+                    returnMap = returnMap.updated(elements, returnMap(elements) + valueMap2)
+                else
+                    returnMap += (elements -> valueMap2)
+            }
     }
     val set = new MultiSet(returnMap)
     set
@@ -115,8 +118,15 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
             else Seq.fill(count)(elem).mkString(",")
         }
 
-        val keyStringSet = multiplicity.keySet.map(elemToString)
-        "{" + keyStringSet.toSeq.sorted.mkString(",") + "}"
+        val keyStringSet = multiplicity.collect {
+            case (elem, count) if count > 0 => elemToString(elem)
+        }
+        var keyStringToSeq = keyStringSet.toSeq
+
+        if(keyStringSet.toSeq.contains("")) //final check to see if there is no empty element in the set
+            keyStringToSeq = keyStringSet.toSeq.filterNot(_ == "")
+
+        "{" + keyStringToSeq.sorted.mkString(",") + "}"
     }
 }
 
