@@ -17,7 +17,7 @@ class MultiSetREPL extends REPLBase {
         // TODO: complete me!
         var resultToString = ""
         val elements = command.split("\\s")
-        //val elements = "( ( {a,b,c} - {a} ) - {a,b} ) - {m,n}".split("\\s")
+        //val elements = "@ {} + {a,b}".split("\\s")
         /*val queue = shuntingYard(elements)
         val expression = reversePolishToExpr(queue)
         val result = SetPatternMatch.SetEval(globalMap, expression)

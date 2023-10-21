@@ -48,19 +48,19 @@ object SetPatternMatch {
 
         bottomExp match
         {
-          case SetOperator(SetConstant(value1), op, SetConstant(value2)) => SetConstant(SetOperatorByName(value1, op, value2))
           case SetOperator(e1, "*", e2) if e1 == e2 => SetSimplify(e1)
-          case SetOperator(SetConstant(value), "*", e) if value.multiplicity.isEmpty =>
+          case SetOperator(SetConstant(value), "*", e) if value.multiplicity.size == 1 => //basically if the set is empty
             val newSet = MultiSet.empty[String]
             SetConstant(newSet)
-          case SetOperator(e, "*", SetConstant(value)) if value.multiplicity.isEmpty =>
+          case SetOperator(e, "*", SetConstant(value)) if value.multiplicity.size == 1 =>
             val newSet = MultiSet.empty[String]
             SetConstant(newSet)
-          case SetOperator(SetConstant(value), "+", e) if value.multiplicity.isEmpty => SetSimplify(e)
-          case SetOperator(e, "+", SetConstant(value)) if value.multiplicity.isEmpty => SetSimplify(e)
+          case SetOperator(SetConstant(value), "+", e) if value.multiplicity.size == 1 => SetSimplify(e)
+          case SetOperator(e, "+", SetConstant(value)) if value.multiplicity.size == 1 => SetSimplify(e)
           case SetOperator(e1, "-", e2) if e1 == e2 =>
             val newSet = MultiSet.empty[String]
             SetConstant(newSet)
+          case SetOperator(SetConstant(value1), op, SetConstant(value2)) => SetConstant(SetOperatorByName(value1, op, value2))
           //case SetOperator(e, "+", Constant(0)) => SetSimplify(e)
           //case SetOperator(Constant(0), "+", e) => SetSimplify(e)
           //case SetOperator(e, "*", Constant(1)) => SetSimplify(e)
