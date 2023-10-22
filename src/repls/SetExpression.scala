@@ -1,6 +1,7 @@
 package repls
 
-abstract class SetExpression {
+abstract class SetExpression
+{
   def value: MultiSet[String]
   def eval(bindings : Map[String,MultiSet[String]]) : MultiSet[String]
 

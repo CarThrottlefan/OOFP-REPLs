@@ -14,9 +14,7 @@ class IntREPL extends REPLBase {
     var outputQueue = Queue[String]()
 
     override def readEval(command: String): String = {
-        val elements = command.split("\\s") // split string based on whitespace //TODO outcomment this for the normal functioning
-        //val elements = "@ ( ( x + 1 ) * 2 ) + ( 3 * ( x + 1 ) )".split("\\s")
-        //globalMap += ("n" -> -16)
+        val elements = command.split("\\s") // split string based on whitespace
         var resultToString = ""
         val patternMatch = PatternMatch
         if(elements.contains("="))
@@ -28,7 +26,6 @@ class IntREPL extends REPLBase {
             }
             val queue = shuntingYard(elements.slice(2, elements.length))
             val expression = reversePolishToExpr(queue)
-            //val result = expression.eval(globalMap)
             val result = patternMatch.eval(globalMap, expression)
             globalMap = globalMap.updated(varName, result)
             resultToString = varName + " = " + result
@@ -39,9 +36,7 @@ class IntREPL extends REPLBase {
             val expression = reversePolishToExpr(queue)
             val patternMatch = PatternMatch
             val simplified: Expression = patternMatch.simplify(expression)
-            //val result = patternMatch.eval(globalMap, simplified)
             resultToString = simplified.toString
-            //val result = simplify()
         }
         else
         {
@@ -50,30 +45,8 @@ class IntREPL extends REPLBase {
             val result = patternMatch.eval(globalMap, expression)
             resultToString = result.toString
         }
-
-        /*val queue = shuntingYard(elements)
-        val expression = reversePolishToExpr(queue)
-        val result = expression.eval(globalMap)*/
-        /*val resultToString: String =
-            if (globalMap == Map())
-                {
-                    result.toString
-                }
-            else
-                {
-                    var newString : String = ""
-                    globalMap = globalMap.updated(elements(0), result)
-                    newString = elements(0) + " = " + result.toString
-                    newString
-                }*/
-
         return resultToString
-
-        // TODO: complete me!
-        ""
-        //a function that implements shunting yard algorithm, then create a tree that represents the formula given as input
     }
-    // TODO: Implement any further functions that are specifically for an IntREPL
     def shuntingYard(input: Array[String]): Queue[String] =
     {
         val numberPattern: Regex = "[0-9]+".r // i am using this just to define if it is a num
@@ -83,14 +56,6 @@ class IntREPL extends REPLBase {
         {
             input(i) match
             {
-                //left bracket - just push on stack
-
-                //right bracket - pop till i find left bracket
-
-                // case + or - => a case where something higher precedence is on stack, if not another case to just push
-
-                // case * - push to stack
-
                 case "(" =>
                     operatorStack.push(input(i))
 
@@ -129,7 +94,6 @@ class IntREPL extends REPLBase {
                     outputQueue.enqueue(input(i))
 
                 case _ if letterPattern.findFirstMatchIn(input(i)).isDefined => //if it's a var
-                    //outputQueue.enqueue(input(i))
                     if(globalMap.contains(input(i)))
                     {
                         outputQueue.enqueue(globalMap(input(i)).toString)
@@ -144,10 +108,10 @@ class IntREPL extends REPLBase {
             val topOfStack = operatorStack.pop()
             outputQueue.enqueue(topOfStack)
         }
-    outputQueue
+        outputQueue
     }
 
-    def reversePolishToExpr(input: mutable.Queue[String]): Expression  = //repls.secondExpression =
+    def reversePolishToExpr(input: mutable.Queue[String]): Expression  =
     {
         var queueToString : String = ""
         for(i <- input.indices)

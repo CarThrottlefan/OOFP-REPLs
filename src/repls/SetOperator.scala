@@ -1,9 +1,11 @@
 package repls
 
-case class SetOperator(lhs: SetExpression, operatorName: String, rhs: SetExpression) extends SetExpression {
+case class SetOperator(lhs: SetExpression, operatorName: String, rhs: SetExpression) extends SetExpression
+{
   override def value: MultiSet[String] = operatorByName(operatorName, lhs.value, rhs.value)
 
-  override def eval(bindings: Map[String, MultiSet[String]]): MultiSet[String] = {
+  override def eval(bindings: Map[String, MultiSet[String]]): MultiSet[String] =
+  {
     val l = lhs.eval(bindings)
     val r = rhs.eval(bindings)
     SetPatternMatch.SetOperatorByName(l, operatorName, r)
@@ -17,7 +19,8 @@ case class SetOperator(lhs: SetExpression, operatorName: String, rhs: SetExpress
   }
 
   override def toString: String =
-    this match {
+    this match
+    {
       case SetOperator(SetOperator(a, op1, b), operatorName, SetOperator(c, op2, d)) =>
         if((op1 == "+" || op1 == "-") && (op2 == "+" || op2 == "-") && operatorName == "*")
         {

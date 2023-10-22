@@ -2,14 +2,13 @@ package repls
 
 import scala.util.matching.Regex
 
-// examples
-// x
 object PatternMatch {
 
   def operatorByName(l: Int, name: String, r: Int): Int = {
     var returnInt : Int = 0
 
-    name match {
+    name match
+    {
       case "+" =>
           returnInt = l + r
           returnInt
@@ -23,26 +22,16 @@ object PatternMatch {
   }
 
   def eval(bindings: Map[String, Int], exp: Expression): Int =
-    exp match {
+    exp match
+    {
       case Constant(i) => i
       case Var(s) if (bindings.contains(s)) => bindings(s)
-      //case Var(s) if (!bindings.contains(s)) => s
-      //case Negate(arg) => -eval(bindings, arg)
       case Operator(lhs, op, rhs) =>
         operatorByName(eval(bindings, lhs), op, eval(bindings, rhs))
     }
-
-  // rules :
-  // -(-e) 	=> e
-  // e + 0 => e
-  // e * 1 => e
   def simplify(exp: Expression): Expression =
-    exp match {
-      //case Negate(Negate(e)) => simplify(e)
-
-      //case SetOperator(e, "-", e) => simplify(e)
-      //case Negate(e) => Negate(simplify(e))
-
+    exp match
+    {
       case Operator(l, op, r) =>
         val bottomExp = Operator(simplify(l), op, simplify(r))
 
@@ -62,8 +51,6 @@ object PatternMatch {
           case Operator(Operator(b, "*", a1), "+", Operator(c, "*", a2)) if a1 == a2 => simplify(Operator(a1, "*", Operator(b, "+", c)))
           case _ => bottomExp
         }
-
-      //case Constant(value) => Constant(value)
       case _ => exp
     }
 }

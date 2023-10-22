@@ -6,8 +6,8 @@ import org.scalatestplus.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class ReplsTestSuite4_2 extends ReplsTestSuitesBase(
-    //new IntReplTests,
-    //new MultiSetTests,
+    new IntReplTests,
+    new MultiSetTests,
     new MultiSetReplTests,
 ) {
     val MaxPoints = 5.5

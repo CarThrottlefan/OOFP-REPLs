@@ -1,9 +1,11 @@
 package repls
 
-case class Operator(lhs: Expression, operatorName: String, rhs: Expression) extends Expression {
+case class Operator(lhs: Expression, operatorName: String, rhs: Expression) extends Expression
+{
   override def value: Int = operatorByName(operatorName, lhs.value, rhs.value)
 
-  override def eval(bindings: Map[String, Int]): Int = {
+  override def eval(bindings: Map[String, Int]): Int =
+  {
     val l = lhs.eval(bindings)
     val r = rhs.eval(bindings)
     PatternMatch.operatorByName(l, operatorName, r).toInt
@@ -17,7 +19,8 @@ case class Operator(lhs: Expression, operatorName: String, rhs: Expression) exte
   }
 
   override def toString: String =
-     this match {
+     this match
+     {
        case Operator(Operator(a, op1, b), operatorName, Operator(c, op2, d)) =>
          if((op1 == "+" || op1 == "-") && (op2 == "+" || op2 == "-") && operatorName == "*")
          {

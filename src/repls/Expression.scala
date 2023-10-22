@@ -1,6 +1,7 @@
 package repls
 
-abstract class Expression {
+abstract class Expression
+{
   def value: Int
   def eval(bindings : Map[String,Int]) : Int
 

@@ -9,15 +9,10 @@ import repls.MultiSet.empty
  */
 
 
-case class MultiSet[T] (multiplicity: Map[T, Int]) {
-
-    /* TODO
-        Intersection of two multisets:
-        ∀x m_c(x) = min(m_a(x), m_b(x))
-        Example:
-        {a,b,b,c,c,c} * {b,c,c,c,c} = {b,c,c,c}
-     */
-    def *(that: MultiSet[T]): MultiSet[T] = {
+case class MultiSet[T] (multiplicity: Map[T, Int])
+{
+    def *(that: MultiSet[T]): MultiSet[T] =
+    {
         var returnMap: Map[T, Int] = Map()
         multiplicity.foreach
         {
@@ -34,43 +29,33 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
         val set = new MultiSet(returnMap)
         set
     }
-    /* TODO
-        Summation of two multisets:
-        ∀x m_c(x) = m_a(x) + m_b(x)
-        Example:
-        {a,b,c,c} + {a,c,d} = {a,a,b,c,c,c,d}
-     */
 
-    def +(that: MultiSet[T]): MultiSet[T] = {
-    /* TODO
-        Subtraction of two multisets:
-        ∀x m_c(x) = max(m_a(x) - m_b(x), 0)
-        Example:
-        {a,b,b,d} - {b,c,c,d,d} = {a,b}
-     */
-    var returnMap: Map[T, Int] = Map()
-    multiplicity.foreach
+    def +(that: MultiSet[T]): MultiSet[T] =
     {
-        case(elements, valueMap1) => returnMap += (elements -> valueMap1)
+        var returnMap: Map[T, Int] = Map()
+        multiplicity.foreach
+        {
+            case(elements, valueMap1) => returnMap += (elements -> valueMap1)
+        }
+        that.multiplicity.foreach
+        {
+            case(elements, valueMap2) =>
+                if(elements.toString != "" && valueMap2 > 0)
+                {
+                    if(returnMap.contains(elements))
+                        returnMap = returnMap.updated(elements, returnMap(elements) + valueMap2)
+                    else
+                        returnMap += (elements -> valueMap2)
+                }
+        }
+        val set = new MultiSet(returnMap)
+        set
     }
-    that.multiplicity.foreach
-    {
-        case(elements, valueMap2) =>
-            if(elements.toString != "" && valueMap2 > 0)
-            {
-                if(returnMap.contains(elements))
-                    returnMap = returnMap.updated(elements, returnMap(elements) + valueMap2)
-                else
-                    returnMap += (elements -> valueMap2)
-            }
-    }
-    val set = new MultiSet(returnMap)
-    set
-}
     def -(that: MultiSet[T]): MultiSet[T] =
     {
         var returnMap: Map[T, Int] = Map()
-        multiplicity.foreach {
+        multiplicity.foreach
+        {
             case (elements, valueMap1) =>
                 if(that.multiplicity.contains(elements))
                 {
@@ -88,14 +73,9 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
         val set = new MultiSet(returnMap)
         set
     }
-    /* TODO
-        Make sure a multiset can be returned as a sequence.
 
-        For example the multiset {a,a,b} should give the sequence Seq(a,a,b).
-
-        The order of the elements in the sequence does not matter.
-     */
-    def toSeq: Seq[T] = {
+    def toSeq: Seq[T] =
+    {
         var retSeq: Seq[T] = Seq()
         multiplicity.foreach{
             case (element, count) =>
@@ -109,16 +89,18 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
 
     val MaxCountForDuplicatePrint = 5
 
-    // A toString has already been provided
-    override def toString: String = {
-        def elemToString(elem: T): String = {
+    override def toString: String =
+    {
+        def elemToString(elem: T): String =
+        {
             val count = multiplicity(elem)
             if (count >= MaxCountForDuplicatePrint)
                 elem.toString + " -> " + count.toString
             else Seq.fill(count)(elem).mkString(",")
         }
 
-        val keyStringSet = multiplicity.collect {
+        val keyStringSet = multiplicity.collect
+        {
             case (elem, count) if count > 0 => elemToString(elem)
         }
         var keyStringToSeq = keyStringSet.toSeq
@@ -132,10 +114,9 @@ case class MultiSet[T] (multiplicity: Map[T, Int]) {
 
 object MultiSet {
     def empty[T] : MultiSet[T] = MultiSet(Map[T,Int]())
-    /* TODO
-        Write a constructor that constructs a multiset from a sequence of elements
-     */
-    def apply[T](elements: Seq[T]): MultiSet[T] = {
+
+    def apply[T](elements: Seq[T]): MultiSet[T] =
+    {
         var keyList:Map[T,Int] = Map();
         elements.foreach(elements =>
         {

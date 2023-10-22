@@ -5,7 +5,8 @@ import scala.util.matching.Regex
 
 object ReversePolish {
 
-  def isNumber(s: String): Boolean = {
+  def isNumber(s: String): Boolean =
+  {
     var sCopy = s
 
     if(s.contains("-"))
@@ -13,15 +14,20 @@ object ReversePolish {
       sCopy = s.dropWhile(_ == '-')
     }
 
-    if (sCopy.isEmpty) return false
-    for (c <- sCopy.toCharArray) {
-      if (!c.isDigit) return false
+    if (sCopy.isEmpty)
+      return false
+
+    for (c <- sCopy.toCharArray)
+    {
+      if (!c.isDigit)
+        return false
     }
     return true
   }
 
   def isVar(s: String): Boolean = {
-    if(s.isEmpty) return false
+    if(s.isEmpty)
+      return false
 
     val isFirstCharLetter = s.headOption.exists(_.isLetter)
     if(!isFirstCharLetter)
@@ -31,32 +37,15 @@ object ReversePolish {
     return true
   }
 
-  // converts reverse polish string to expression tree
-  //
-  // example :
-  //   "1 3 5 + * 2 -"
-  //   => SetOperator(SetOperator(Constant(1), "*", SetOperator(repls.Const(3), "+", repls.Const(5)), "-", repls.Const(2)))
-  def reversePolishToExpression(expression: String, varMap: Map[String, Int]): Expression = {
+  def reversePolishToExpression(expression: String, varMap: Map[String, Int]): Expression =
+  {
     val s: Stack[Expression] = new Stack()
-    /*for (el <- expression.split(" ")) {
-      if (isOperator(el)) {
-        val rhs = s.pop
-        val lhs = s.pop
-        val res = SetOperator(lhs, el, rhs)
-        s.push(res)
-      } else if (isNumber(el)) s.push(Constant(el.toInt))
-      else if (isVar(el)) {
-        s.push(Var(el))
-
-      }
-      else if(el == "=") el continue
-      else throw new Error("Unknown expression element " + el)
-    }*/
     val elements = expression.split(" ")
     var i = 0
     while (i < elements.length)
     {
-      if (isOperator(elements(i))) {
+      if (isOperator(elements(i)))
+      {
         val rhs = s.pop
         val lhs = s.pop
         val res = Operator(lhs, elements(i), rhs)
@@ -84,7 +73,6 @@ object ReversePolish {
     }
     s.top
   }
-
 
   private def isOperator(s: String) = s == "+" || s == "*" || s == "-"
 }

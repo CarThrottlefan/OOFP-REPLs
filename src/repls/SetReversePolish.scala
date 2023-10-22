@@ -3,9 +3,11 @@ package repls
 import scala.collection.mutable.Stack
 import scala.util.matching.Regex
 
-object SetReversePolish {
+object SetReversePolish
+{
 
-  def isVar(s: String): Boolean = {
+  def isVar(s: String): Boolean =
+  {
     if(s.isEmpty) return false
 
     val isFirstCharLetter = s.headOption.exists(_.isLetter)
@@ -27,33 +29,15 @@ object SetReversePolish {
     return true
   }
 
-
-  // converts reverse polish string to expression tree
-  //
-  // example :
-  //   "1 3 5 + * 2 -"
-  //   => SetOperator(SetOperator(Constant(1), "*", SetOperator(repls.Const(3), "+", repls.Const(5)), "-", repls.Const(2)))
-  def reversePolishToExpression(expression: String, varMap: Map[String, MultiSet[String]]): SetExpression = {
+  def reversePolishToExpression(expression: String, varMap: Map[String, MultiSet[String]]): SetExpression =
+  {
     val s: Stack[SetExpression] = new Stack()
-    /*for (el <- expression.split(" ")) {
-      if (isOperator(el)) {
-        val rhs = s.pop
-        val lhs = s.pop
-        val res = SetOperator(lhs, el, rhs)
-        s.push(res)
-      } else if (isNumber(el)) s.push(Constant(el.toInt))
-      else if (isVar(el)) {
-        s.push(Var(el))
-
-      }
-      else if(el == "=") el continue
-      else throw new Error("Unknown expression element " + el)
-    }*/
     val elements = expression.split(" ")
     var i = 0
     while (i < elements.length)
     {
-      if (isOperator(elements(i))) {
+      if (isOperator(elements(i)))
+      {
         val rhs = s.pop
         val lhs = s.pop
         val res = SetOperator(lhs, elements(i), rhs)
